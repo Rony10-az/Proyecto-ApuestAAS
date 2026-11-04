@@ -1,7 +1,7 @@
 {
-  "name": "semana12",
+  "name": "apuestas",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicacion educativa para predecir partidos y acumular puntos",
   "main": "index.js",
   "scripts": {
     "server": "nodemon src/server.js",
