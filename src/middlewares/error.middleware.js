@@ -6,9 +6,12 @@ function notFoundHandler(req, res) {
 
 function errorHandler(error, _req, res, _next) {
   console.error(error);
-  res.status(error.statusCode || 500).json({
-    error: 'Error interno del servidor',
-  });
+  const statusCode = error.statusCode || 500;
+  // Solo se expone error.message cuando el propio codigo seteo un
+  // statusCode (errores de validacion/negocio con mensaje curado y seguro).
+  // Un error inesperado (500 sin statusCode) nunca filtra su mensaje interno.
+  const message = error.statusCode ? error.message : 'Error interno del servidor';
+  res.status(statusCode).json({ error: message });
 }
 
 module.exports = {

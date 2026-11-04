@@ -13,6 +13,7 @@ function ensureDatabase() {
       users: [],
       matches: [],
       predictions: [],
+      rooms: [],
     }, null, 2));
   }
 }

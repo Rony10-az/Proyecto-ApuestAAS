@@ -11,6 +11,8 @@ const elements = {
   matchesList: document.querySelector('#matches-list'),
   calendarList: document.querySelector('#calendar-list'),
   rankingList: document.querySelector('#ranking-list'),
+  roomsSection: document.querySelector('#rooms-section'),
+  roomsList: document.querySelector('#rooms-list'),
 };
 
 async function request(url, options = {}) {
@@ -34,6 +36,7 @@ function formData(form) {
 function setSession(user) {
   elements.authSection.classList.toggle('hidden', Boolean(state.token));
   elements.appSection.classList.toggle('hidden', !state.token);
+  elements.roomsSection.classList.toggle('hidden', !state.token);
   elements.logoutButton.classList.toggle('hidden', !state.token);
   elements.sessionUser.textContent = user ? `Hola, ${user.name}` : '';
 }
@@ -115,6 +118,75 @@ function renderCalendar({ matches }) {
     </article>`).join('');
 }
 
+function renderRooms(rooms) {
+  if (!rooms.length) {
+    elements.roomsList.innerHTML = '<p class="empty-state">Aún no perteneces a ninguna sala.</p>';
+    return;
+  }
+  elements.roomsList.innerHTML = rooms.map((room) => `
+    <article class="room-card" data-room-id="${room.id}">
+      <h3>${room.name}</h3>
+      <span class="room-code">${room.code}</span>
+      <p class="room-members">${room.members.length} participante${room.members.length === 1 ? '' : 's'}</p>
+      <button class="button button-ghost room-ranking-button" type="button" data-room-id="${room.id}">Ver ranking</button>
+      <div class="room-ranking hidden"></div>
+    </article>`).join('');
+  document.querySelectorAll('.room-ranking-button').forEach((button) => {
+    button.addEventListener('click', toggleRoomRanking);
+  });
+}
+
+async function toggleRoomRanking(event) {
+  const roomId = event.currentTarget.dataset.roomId;
+  const container = document.querySelector(`.room-card[data-room-id="${roomId}"] .room-ranking`);
+  if (!container.classList.contains('hidden')) {
+    container.classList.add('hidden');
+    return;
+  }
+  try {
+    const ranking = await request(`/rooms/${roomId}/ranking`);
+    container.innerHTML = ranking.length
+      ? ranking.map((player, index) => `
+        <div class="ranking-row">
+          <span class="position">#${index + 1}</span>
+          <span class="rank-name">${player.name}</span>
+          <span class="rank-points">${player.points} pts</span>
+        </div>`).join('')
+      : '<p class="empty-state">Todavía no hay puntos en esta sala.</p>';
+    container.classList.remove('hidden');
+  } catch (error) {
+    showMessage(error.message, 'error');
+  }
+}
+
+async function loadRooms() {
+  renderRooms(await request('/rooms/mine'));
+}
+
+async function createRoom(event) {
+  event.preventDefault();
+  try {
+    await request('/rooms', { method: 'POST', body: JSON.stringify(formData(event.target)) });
+    showMessage('Sala creada correctamente.');
+    event.target.reset();
+    await loadRooms();
+  } catch (error) {
+    showMessage(error.message, 'error');
+  }
+}
+
+async function joinRoom(event) {
+  event.preventDefault();
+  try {
+    await request('/rooms/join', { method: 'POST', body: JSON.stringify(formData(event.target)) });
+    showMessage('Te uniste a la sala correctamente.');
+    event.target.reset();
+    await loadRooms();
+  } catch (error) {
+    showMessage(error.message, 'error');
+  }
+}
+
 async function loadDashboard() {
   const [matches, ranking] = await Promise.all([
     request('/matches'),
@@ -122,6 +194,7 @@ async function loadDashboard() {
   ]);
   renderMatches(matches);
   renderRanking(ranking);
+  await loadRooms();
 }
 
 async function loadCalendar() {
@@ -154,6 +227,8 @@ async function submitPrediction(event) {
 document.querySelector('#login-form').addEventListener('submit', (event) => authenticate(event, 'login'));
 document.querySelector('#register-form').addEventListener('submit', (event) => authenticate(event, 'register'));
 document.querySelector('#refresh-button').addEventListener('click', loadDashboard);
+document.querySelector('#create-room-form').addEventListener('submit', createRoom);
+document.querySelector('#join-room-form').addEventListener('submit', joinRoom);
 elements.logoutButton.addEventListener('click', () => {
   state.token = null;
   localStorage.removeItem('apuestas_token');

@@ -9,6 +9,7 @@ const matchRoutes = require('./routes/match.routes');
 const predictionRoutes = require('./routes/prediction.routes');
 const rankingRoutes = require('./routes/ranking.routes');
 const calendarRoutes = require('./routes/calendar.routes');
+const roomRoutes = require('./routes/room.routes');
 const {
   notFoundHandler,
   errorHandler,
@@ -39,6 +40,7 @@ app.use('/matches', matchRoutes);
 app.use('/predictions', predictionRoutes);
 app.use('/ranking', rankingRoutes);
 app.use('/calendar', calendarRoutes);
+app.use('/rooms', roomRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 

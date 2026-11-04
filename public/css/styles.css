@@ -81,6 +81,19 @@ input { background: #fbfcfa; border: 1px solid var(--line); border-radius: 9px; 
 .prediction-form input { padding: 9px; text-align: center; width: 52px; }
 .prediction-form .button { margin: 0; padding: 10px 12px; }
 
+.rooms-section { margin-bottom: 70px; }
+.rooms-forms { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 20px; }
+.room-inline-form { align-items: center; display: flex; gap: 10px; }
+.room-inline-form input { flex: 1; }
+.room-inline-form .button { margin: 0; white-space: nowrap; }
+.rooms-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.room-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+.room-card h3 { font-size: 1.1rem; margin: 0 0 6px; }
+.room-code { background: var(--paper); border-radius: 7px; color: var(--green-dark); display: inline-block; font-weight: 800; letter-spacing: .08em; margin-bottom: 10px; padding: 4px 9px; }
+.room-members { color: var(--muted); font-size: .78rem; margin-bottom: 14px; }
+.room-ranking { display: grid; gap: 8px; margin-top: 10px; }
+.room-ranking .ranking-row { background: var(--paper); border-bottom: 0; border-radius: 9px; padding: 10px 14px; }
+
 .ranking-list { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
 .ranking-row { align-items: center; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 44px 1fr auto; padding: 16px 20px; }
 .ranking-row:last-child { border-bottom: 0; }
