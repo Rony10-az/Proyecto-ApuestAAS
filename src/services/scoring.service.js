@@ -48,7 +48,9 @@ function calculateRanking(users, matches, predictions) {
       const score = prediction && calculatePredictionPoints(prediction, match);
       if (score) {
         points += score.totalPoints;
-        if (score.basePoints > 0) {
+        // La racha exige "al menos el ganador" (3 pts): un acierto de solo
+        // diferencia de goles (2 pts) no la mantiene.
+        if (score.basePoints >= 3) {
           correctStreak += 1;
           if (correctStreak % 3 === 0) {
             points += 2;

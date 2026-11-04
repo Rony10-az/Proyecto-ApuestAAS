@@ -55,4 +55,6 @@ module.exports = {
   login,
   publicUser,
   jwtSecret,
+  hashPassword,
+  verifyPassword,
 };

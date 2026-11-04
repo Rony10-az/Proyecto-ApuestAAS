@@ -33,6 +33,14 @@ npm install
 npm run dev
 ```
 
+## Pruebas unitarias
+
+```bash
+npm test
+```
+
+Corre con el test runner nativo de Node (`node --test`, sin dependencias extra) y cubre las 5 reglas de puntuación (`scoring.service.js`) y el hash/verificación de contraseñas (`auth.service.js`). Ver [test/](test/).
+
 ## Pruebas de estrés
 
 ```bash
