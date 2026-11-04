@@ -22,31 +22,79 @@
     </div>
   </header>
 
-  <main class="container">
-    <section class="hero">
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-inner container">
       <div class="hero-text">
         <p class="eyebrow">MUNDIAL DE FÚTBOL</p>
         <h1>Tu pronóstico.<br><span>Tu marcador.</span></h1>
         <p class="hero-copy">Predice los resultados, compite con tus amigos y demuestra cuánto sabes de fútbol.</p>
       </div>
-      <div class="hero-ball" aria-hidden="true">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="48" fill="currentColor" opacity=".12"/>
-          <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="2"/>
-          <g fill="currentColor">
-            <polygon points="50,28 61,36 57,49 43,49 39,36"/>
-            <polygon points="50,28 50,14 38,10 32,20"/>
-            <polygon points="61,36 74,34 78,22 68,12"/>
-            <polygon points="57,49 66,60 80,56 78,42"/>
-            <polygon points="43,49 34,60 20,56 22,42"/>
-            <polygon points="39,36 26,34 22,22 32,12"/>
-          </g>
-          <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"/>
-        </svg>
+      <div class="hero-ball-wrap" id="hero-ball-wrap">
+        <div class="hero-ball-float">
+          <button type="button" class="hero-ball" id="hero-ball" aria-label="Patea el balón">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="48" fill="#ffffff"/>
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#17231b" stroke-width="2"/>
+              <g fill="#17231b">
+                <polygon points="50,28 61,36 57,49 43,49 39,36"/>
+                <polygon points="50,28 50,14 38,10 32,20"/>
+                <polygon points="61,36 74,34 78,22 68,12"/>
+                <polygon points="57,49 66,60 80,56 78,42"/>
+                <polygon points="43,49 34,60 20,56 22,42"/>
+                <polygon points="39,36 26,34 22,22 32,12"/>
+              </g>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#rules-section" aria-label="Bajar a reglas de puntuación">
+      <span class="scroll-cue-arrow" aria-hidden="true"></span>
+      <span class="scroll-cue-label">Descubre las reglas</span>
+    </a>
+    <p class="hero-credit">Nelson Mandela Bay Stadium · foto de ngrund (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>)</p>
+  </section>
+
+  <main class="container">
+    <div id="message" class="toast" role="status" aria-live="polite"></div>
+
+    <section id="rules-section" class="rules-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CÓMO SE JUEGA</p>
+          <h2>Reglas de puntuación</h2>
+        </div>
+      </div>
+      <div class="rules-grid">
+        <article class="rule-card">
+          <span class="rule-points">5 pts</span>
+          <h3>Resultado exacto</h3>
+          <p>Aciertas el marcador exacto del partido (ej. predices 2-1 y termina 2-1).</p>
+        </article>
+        <article class="rule-card">
+          <span class="rule-points">3 pts</span>
+          <h3>Ganador correcto</h3>
+          <p>Aciertas qué equipo gana (o el empate), aunque no el marcador exacto.</p>
+        </article>
+        <article class="rule-card">
+          <span class="rule-points">2 pts</span>
+          <h3>Diferencia de goles</h3>
+          <p>Aciertas el margen de victoria aunque no el marcador exacto ni el ganador.</p>
+        </article>
+        <article class="rule-card accent-card">
+          <span class="rule-points">+2 pts</span>
+          <h3>Bono por racha</h3>
+          <p>Por cada 3 partidos seguidos acertando al menos el ganador.</p>
+        </article>
+        <article class="rule-card accent-card">
+          <span class="rule-points">+1 pt</span>
+          <h3>Predicción anticipada</h3>
+          <p>Si registras tu predicción con más de 24h de anticipación al partido.</p>
+        </article>
       </div>
     </section>
-
-    <div id="message" class="message hidden" role="status"></div>
 
     <section id="auth-section" class="auth-grid">
       <article class="card auth-card">
@@ -80,64 +128,69 @@
       </article>
     </section>
 
-    <section id="app-section" class="dashboard hidden">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">ZONA DE JUEGO</p>
-          <h2>Partidos disponibles</h2>
-        </div>
-        <button id="refresh-button" class="button button-ghost" type="button">Actualizar</button>
-      </div>
-      <div id="matches-list" class="matches-list"></div>
-    </section>
+    <div class="layout-grid">
+      <div class="layout-main">
+        <section id="app-section" class="dashboard hidden">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">ZONA DE JUEGO</p>
+              <h2>Partidos disponibles</h2>
+            </div>
+            <button id="refresh-button" class="button button-ghost" type="button">Actualizar</button>
+          </div>
+          <div id="matches-list" class="matches-list"></div>
+        </section>
 
-    <section id="rooms-section" class="rooms-section hidden">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">COMPITE CON TUS AMIGOS</p>
-          <h2>Salas</h2>
-        </div>
-      </div>
-      <div class="rooms-forms">
-        <form id="create-room-form" class="room-inline-form">
-          <input name="name" type="text" placeholder="Nombre de la sala" required>
-          <button class="button button-primary" type="submit">Crear sala</button>
-        </form>
-        <form id="join-room-form" class="room-inline-form">
-          <input name="code" type="text" placeholder="Código de invitación" maxlength="6" required>
-          <button class="button button-dark" type="submit">Unirme</button>
-        </form>
-      </div>
-      <div id="rooms-list" class="rooms-grid">
-        <p class="empty-state">Aún no perteneces a ninguna sala.</p>
-      </div>
-    </section>
+        <section id="rooms-section" class="rooms-section hidden">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">COMPITE CON TUS AMIGOS</p>
+              <h2>Salas</h2>
+            </div>
+          </div>
+          <div class="rooms-forms">
+            <form id="create-room-form" class="room-inline-form">
+              <input name="name" type="text" placeholder="Nombre de la sala" required>
+              <button class="button button-primary" type="submit">Crear sala</button>
+            </form>
+            <form id="join-room-form" class="room-inline-form">
+              <input name="code" type="text" placeholder="Código de invitación" maxlength="6" required>
+              <button class="button button-dark" type="submit">Unirme</button>
+            </form>
+          </div>
+          <div id="rooms-list" class="rooms-grid">
+            <p class="empty-state">Aún no perteneces a ninguna sala.</p>
+          </div>
+        </section>
 
-    <section id="calendar-section" class="calendar-section">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">SIMULACIÓN MUNDIALISTA</p>
-          <h2>Calendario · primeros dos días</h2>
-        </div>
-        <span class="points-label">Qatar 2022 · 4 partidos programados</span>
+        <section id="calendar-section" class="calendar-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">SIMULACIÓN MUNDIALISTA</p>
+              <h2>Calendario · primeros dos días</h2>
+            </div>
+            <span class="points-label">Qatar 2022 · 4 partidos programados</span>
+          </div>
+          <div id="calendar-list" class="calendar-list">
+            <p class="empty-state">Cargando calendario...</p>
+          </div>
+        </section>
       </div>
-      <div id="calendar-list" class="calendar-list">
-        <p class="empty-state">Cargando calendario...</p>
-      </div>
-    </section>
 
-    <section class="ranking-section">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">COMPETENCIA</p>
-          <h2>Tabla de posiciones</h2>
-        </div>
-        <span class="points-label">Puntos acumulados</span>
-      </div>
-      <div id="ranking-list" class="ranking-list">
-        <p class="empty-state">Inicia sesión para comenzar a competir.</p>
-      </div>
-    </section>
+      <aside class="layout-sidebar">
+        <section class="ranking-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">COMPETENCIA</p>
+              <h2>Tabla de posiciones</h2>
+            </div>
+          </div>
+          <div id="ranking-list" class="ranking-list">
+            <p class="empty-state">Inicia sesión para comenzar a competir.</p>
+          </div>
+        </section>
+      </aside>
+    </div>
   </main>
 
   <footer>

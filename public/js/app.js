@@ -24,9 +24,20 @@ async function request(url, options = {}) {
   return data;
 }
 
+const TOAST_ICON = {
+  success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>',
+};
+
+let toastTimer = null;
+
 function showMessage(text, type = 'success') {
-  elements.message.className = `message ${type}`;
-  elements.message.textContent = text;
+  clearTimeout(toastTimer);
+  elements.message.innerHTML = `
+    <span class="toast-icon">${TOAST_ICON[type] || TOAST_ICON.success}</span>
+    <span class="toast-text">${text}</span>`;
+  elements.message.className = `toast toast-${type} toast-visible`;
+  toastTimer = setTimeout(() => elements.message.classList.remove('toast-visible'), 3400);
 }
 
 function formData(form) {
@@ -66,16 +77,80 @@ function matchTeam(name, flagUrl, formation, variant) {
     </div>`;
 }
 
-function renderMatches(matches) {
+const SCORE_REASON_LABEL = {
+  exact: 'Resultado exacto',
+  winner: 'Ganador correcto',
+  difference: 'Diferencia de goles',
+  miss: 'Sin acierto',
+};
+
+function voteFlag(flagUrl, name) {
+  return flagUrl ? `<img class="vote-flag" src="${flagUrl}" alt="Bandera de ${name}" loading="lazy">` : '';
+}
+
+function voteActiveState(mine, home, away) {
+  if (!mine) return '';
+  return Number(mine.homeScore) === home && Number(mine.awayScore) === away ? ' active' : '';
+}
+
+function renderPredictPanel(match, mine) {
+  if (match.status === 'finished') {
+    if (!mine) return '';
+    const { homeScore, awayScore } = mine;
+    const points = mine.score ? mine.score.totalPoints : 0;
+    const reason = mine.score ? SCORE_REASON_LABEL[mine.score.reason] : SCORE_REASON_LABEL.miss;
+    return `<p class="my-prediction">Tu predicción fue <strong>${homeScore} - ${awayScore}</strong> · ${reason}, <strong>+${points} pts</strong></p>`;
+  }
+
+  const homeValue = mine ? mine.homeScore : '';
+  const awayValue = mine ? mine.awayScore : '';
+  return `
+    <div class="predict-panel">
+      ${mine ? `<p class="my-prediction">Ya votaste <strong>${mine.homeScore} - ${mine.awayScore}</strong>. Puedes actualizarla:</p>` : ''}
+      <div class="predict-header">
+        <p class="vote-label">¿Quién gana?</p>
+        <span class="points-hint">Ganador correcto <strong>+3 pts</strong></span>
+      </div>
+      <div class="vote-options" data-match-id="${match.id}">
+        <button type="button" class="vote-btn${voteActiveState(mine, 1, 0)}" data-home="1" data-away="0">
+          ${voteFlag(match.homeFlagUrl, match.homeTeam)}
+          <span class="vote-team">${match.homeTeam}</span>
+          ${match.homeFormation ? `<span class="vote-formation">${match.homeFormation}</span>` : ''}
+        </button>
+        <button type="button" class="vote-btn vote-draw${voteActiveState(mine, 1, 1)}" data-home="1" data-away="1">
+          <span class="vote-icon-draw" aria-hidden="true">=</span>
+          <span class="vote-team">Empate</span>
+        </button>
+        <button type="button" class="vote-btn${voteActiveState(mine, 0, 1)}" data-home="0" data-away="1">
+          ${voteFlag(match.awayFlagUrl, match.awayTeam)}
+          <span class="vote-team">${match.awayTeam}</span>
+          ${match.awayFormation ? `<span class="vote-formation">${match.awayFormation}</span>` : ''}
+        </button>
+      </div>
+      <form class="prediction-form" data-match-id="${match.id}">
+        <label class="score-label">O arma el marcador exacto <span class="points-hint">+5 pts si aciertas</span></label>
+        <div class="score-inputs">
+          <input name="homeScore" type="number" min="0" placeholder="0" value="${homeValue}" required aria-label="Goles de ${match.homeTeam}">
+          <strong>-</strong>
+          <input name="awayScore" type="number" min="0" placeholder="0" value="${awayValue}" required aria-label="Goles de ${match.awayTeam}">
+          <button class="button button-primary" type="submit">${mine ? 'Actualizar predicción' : 'Confirmar predicción'}</button>
+        </div>
+      </form>
+    </div>`;
+}
+
+function renderMatches(matches, myPredictions = []) {
   if (!matches.length) {
     elements.matchesList.innerHTML = '<p class="empty-state">Aún no hay partidos disponibles.</p>';
     return;
   }
+  const predictionsByMatch = Object.fromEntries(myPredictions.map((p) => [p.matchId, p]));
   elements.matchesList.innerHTML = matches.map((match, index) => {
     const date = new Date(match.startsAt).toLocaleString('es-PE', {
       dateStyle: 'medium', timeStyle: 'short',
     });
     const isFinished = match.status === 'finished';
+    const mine = predictionsByMatch[match.id];
     return `
       <article class="match-card" style="--i:${index}">
         ${matchTeam(match.homeTeam, match.homeFlagUrl, match.homeFormation, 'home')}
@@ -84,29 +159,78 @@ function renderMatches(matches) {
           <span class="match-date">${date}</span>
         </span>
         ${matchTeam(match.awayTeam, match.awayFlagUrl, match.awayFormation, 'away')}
-        ${!isFinished ? `
-          <form class="prediction-form" data-match-id="${match.id}">
-            <input name="homeScore" type="number" min="0" placeholder="0" required aria-label="Goles de ${match.homeTeam}">
-            <strong>-</strong>
-            <input name="awayScore" type="number" min="0" placeholder="0" required aria-label="Goles de ${match.awayTeam}">
-            <button class="button button-primary" type="submit">Predecir</button>
-          </form>
-        ` : '<span class="match-center">Finalizado</span>'}
+        ${isFinished ? '<span class="match-center">Finalizado</span>' : ''}
+        ${renderPredictPanel(match, mine)}
       </article>`;
   }).join('');
   document.querySelectorAll('.prediction-form').forEach((form) => {
     form.addEventListener('submit', submitPrediction);
   });
+  document.querySelectorAll('.vote-options').forEach((group) => {
+    group.querySelectorAll('.vote-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.vote-btn').forEach((other) => other.classList.remove('active'));
+        btn.classList.add('active');
+        const form = document.querySelector(`.prediction-form[data-match-id="${group.dataset.matchId}"]`);
+        form.homeScore.value = btn.dataset.home;
+        form.awayScore.value = btn.dataset.away;
+      });
+    });
+  });
+}
+
+const AVATAR_PALETTE = ['#2e8b57', '#1d5b3a', '#0f6b4c', '#3c6e52', '#2f6690', '#6a4c93', '#a44a3f', '#c9852b'];
+
+function hashString(text) {
+  let hash = 0;
+  for (let i = 0; i < text.length; i += 1) {
+    hash = (hash << 5) - hash + text.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function avatarFor(name) {
+  const initials = name.trim().split(/\s+/).slice(0, 2).map((word) => word[0].toUpperCase()).join('');
+  return { initials, color: AVATAR_PALETTE[hashString(name) % AVATAR_PALETTE.length] };
+}
+
+function starIcon(filled) {
+  return `<svg class="${filled ? 'star-filled' : 'star-empty'}" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.2l7.1-.6z"/></svg>`;
+}
+
+function starRating(points, maxPoints) {
+  const filled = maxPoints > 0 ? Math.max(0, Math.min(5, Math.round((points / maxPoints) * 5))) : 0;
+  return Array.from({ length: 5 }, (_, i) => starIcon(i < filled)).join('');
+}
+
+function rankingRowHtml(player, index, maxPoints) {
+  const { initials, color } = avatarFor(player.name);
+  return `
+    <div class="ranking-row" style="--i:${index}">
+      <span class="position">#${index + 1}</span>
+      <span class="rank-avatar" style="background:${color}">${initials}</span>
+      <span class="rank-info">
+        <span class="rank-name">${player.name}</span>
+        <span class="rank-meta">
+          <span class="rank-stars">${starRating(player.points, maxPoints)}</span>
+          <span class="rank-points">${player.points} pts</span>
+        </span>
+      </span>
+    </div>`;
+}
+
+function renderRankingInto(container, ranking) {
+  if (!ranking.length) {
+    container.innerHTML = '<p class="empty-state">Todavía no hay participantes.</p>';
+    return;
+  }
+  const maxPoints = ranking[0].points;
+  container.innerHTML = ranking.map((player, index) => rankingRowHtml(player, index, maxPoints)).join('');
 }
 
 function renderRanking(ranking) {
-  elements.rankingList.innerHTML = ranking.length ? ranking.map((player, index) => `
-    <div class="ranking-row" style="--i:${index}">
-      <span class="position">#${index + 1}</span>
-      <span class="rank-name">${player.name}</span>
-      <span class="rank-points">${player.points} pts</span>
-    </div>
-  `).join('') : '<p class="empty-state">Todavía no hay participantes.</p>';
+  renderRankingInto(elements.rankingList, ranking);
 }
 
 const PITCH_POSITION_ORDER = ['Arquero', 'Defensa', 'Mediocampista', 'Delantero'];
@@ -205,14 +329,11 @@ async function toggleRoomRanking(event) {
   }
   try {
     const ranking = await request(`/rooms/${roomId}/ranking`);
-    container.innerHTML = ranking.length
-      ? ranking.map((player, index) => `
-        <div class="ranking-row">
-          <span class="position">#${index + 1}</span>
-          <span class="rank-name">${player.name}</span>
-          <span class="rank-points">${player.points} pts</span>
-        </div>`).join('')
-      : '<p class="empty-state">Todavía no hay puntos en esta sala.</p>';
+    if (!ranking.length) {
+      container.innerHTML = '<p class="empty-state">Todavía no hay puntos en esta sala.</p>';
+    } else {
+      renderRankingInto(container, ranking);
+    }
     container.classList.remove('hidden');
   } catch (error) {
     showMessage(error.message, 'error');
@@ -248,11 +369,12 @@ async function joinRoom(event) {
 }
 
 async function loadDashboard() {
-  const [matches, ranking] = await Promise.all([
+  const [matches, ranking, myPredictions] = await Promise.all([
     request('/matches'),
     request('/ranking'),
+    request('/predictions/mine'),
   ]);
-  renderMatches(matches);
+  renderMatches(matches, myPredictions);
   renderRanking(ranking);
   await loadRooms();
 }
@@ -277,15 +399,65 @@ async function submitPrediction(event) {
       method: 'POST',
       body: JSON.stringify({
         matchId: event.currentTarget.dataset.matchId,
-        ...formData(event.currentTarget),
         homeScore: Number(event.currentTarget.homeScore.value),
         awayScore: Number(event.currentTarget.awayScore.value),
       }),
     });
     showMessage('Predicción registrada correctamente.');
-    event.currentTarget.reset();
+    const [matches, myPredictions] = await Promise.all([
+      request('/matches'),
+      request('/predictions/mine'),
+    ]);
+    renderMatches(matches, myPredictions);
   } catch (error) {
     showMessage(error.message, 'error');
+  }
+}
+
+function initHero() {
+  const hero = document.querySelector('#hero');
+  const heroBg = document.querySelector('#hero-bg');
+  const ballWrap = document.querySelector('#hero-ball-wrap');
+  const ball = document.querySelector('#hero-ball');
+  if (!hero || !heroBg) return;
+
+  heroBg.style.backgroundImage = "url('/images/hero-stadium.jpg')";
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const rect = hero.getBoundingClientRect();
+      if (rect.bottom > 0) {
+        heroBg.style.transform = `translateY(${window.scrollY * 0.25}px)`;
+      }
+      ticking = false;
+    });
+  }, { passive: true });
+
+  if (ballWrap) {
+    hero.addEventListener('mousemove', (event) => {
+      const rect = hero.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      ballWrap.style.transform = `translate(${x * 26}px, ${y * 26}px)`;
+    });
+    hero.addEventListener('mouseleave', () => {
+      ballWrap.style.transform = '';
+    });
+  }
+
+  if (ball) {
+    ball.addEventListener('click', () => {
+      ball.classList.remove('kicked');
+      void ball.offsetWidth;
+      ball.classList.add('kicked');
+      setTimeout(() => ball.classList.remove('kicked'), 600);
+    });
   }
 }
 
@@ -301,6 +473,7 @@ elements.logoutButton.addEventListener('click', () => {
   showMessage('Sesión cerrada.');
 });
 
+initHero();
 setSession(state.token ? { name: 'participante' } : null);
 loadCalendar();
 if (state.token) loadDashboard().catch(() => {
