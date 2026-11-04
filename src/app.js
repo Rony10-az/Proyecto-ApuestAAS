@@ -2,6 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const healthRoutes = require('./routes/health.routes');
+const authRoutes = require('./routes/auth.routes');
+const matchRoutes = require('./routes/match.routes');
+const predictionRoutes = require('./routes/prediction.routes');
+const rankingRoutes = require('./routes/ranking.routes');
 const {
   notFoundHandler,
   errorHandler,
@@ -18,6 +22,10 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/matches', matchRoutes);
+app.use('/api/predictions', predictionRoutes);
+app.use('/api/ranking', rankingRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
