@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const morgan = require('morgan');
+const { instanceId } = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
 const matchRoutes = require('./routes/match.routes');
@@ -19,6 +20,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+app.use((_req, res, next) => {
+  res.setHeader('X-Instance-Id', instanceId);
+  next();
+});
 
 app.get('/', (_req, res) => {
   res.redirect('/apuestas');
