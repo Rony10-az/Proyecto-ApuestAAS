@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ApuestAs: predice partidos y acumula puntos.">
+  <title>ApuestAs | Predicciones mundialistas</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/apuestas">Apuest<span>As</span></a>
+    <div class="session-area">
+      <a class="button button-ghost calendar-button" href="#calendar-section">Calendario</a>
+      <span id="session-user" class="session-user"></span>
+      <button id="logout-button" class="button button-ghost hidden" type="button">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">MUNDIAL DE FÚTBOL</p>
+        <h1>Tu pronóstico.<br><span>Tu marcador.</span></h1>
+        <p class="hero-copy">Predice los resultados, compite con tus amigos y demuestra cuánto sabes de fútbol.</p>
+      </div>
+      <div class="hero-ball" aria-hidden="true">⚽</div>
+    </section>
+
+    <div id="message" class="message hidden" role="status"></div>
+
+    <section id="auth-section" class="auth-grid">
+      <article class="card auth-card">
+        <div class="card-heading">
+          <p class="eyebrow">CUENTA</p>
+          <h2>Iniciar sesión</h2>
+        </div>
+        <form id="login-form">
+          <label for="login-email">Correo electrónico</label>
+          <input id="login-email" name="email" type="email" required autocomplete="email">
+          <label for="login-password">Contraseña</label>
+          <input id="login-password" name="password" type="password" required autocomplete="current-password">
+          <button class="button button-primary" type="submit">Entrar</button>
+        </form>
+      </article>
+
+      <article class="card auth-card accent-card">
+        <div class="card-heading">
+          <p class="eyebrow">NUEVO PARTICIPANTE</p>
+          <h2>Crear cuenta</h2>
+        </div>
+        <form id="register-form">
+          <label for="register-name">Nombre</label>
+          <input id="register-name" name="name" type="text" required autocomplete="name">
+          <label for="register-email">Correo electrónico</label>
+          <input id="register-email" name="email" type="email" required autocomplete="email">
+          <label for="register-password">Contraseña</label>
+          <input id="register-password" name="password" type="password" minlength="6" required autocomplete="new-password">
+          <button class="button button-dark" type="submit">Registrarme</button>
+        </form>
+      </article>
+    </section>
+
+    <section id="app-section" class="dashboard hidden">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">ZONA DE JUEGO</p>
+          <h2>Partidos disponibles</h2>
+        </div>
+        <button id="refresh-button" class="button button-ghost" type="button">Actualizar</button>
+      </div>
+      <div id="matches-list" class="matches-list"></div>
+    </section>
+
+    <section id="calendar-section" class="calendar-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">SIMULACIÓN MUNDIALISTA</p>
+          <h2>Calendario · primeros dos días</h2>
+        </div>
+        <span class="points-label">Qatar 2022 · 4 partidos programados</span>
+      </div>
+      <div id="calendar-list" class="calendar-list">
+        <p class="empty-state">Cargando calendario...</p>
+      </div>
+    </section>
+
+    <section class="ranking-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">COMPETENCIA</p>
+          <h2>Tabla de posiciones</h2>
+        </div>
+        <span class="points-label">Puntos acumulados</span>
+      </div>
+      <div id="ranking-list" class="ranking-list">
+        <p class="empty-state">Inicia sesión para comenzar a competir.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>ApuestAs · Juego educativo sin dinero real</p>
+  </footer>
+</body>
+</html>

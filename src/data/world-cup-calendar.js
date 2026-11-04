@@ -1,0 +1,158 @@
+const teams = {
+  qat: {
+    name: 'Qatar', code: 'QAT', flag: '🇶🇦', coach: 'Félix Sánchez',
+    formation: '5-3-2', colors: ['#8a1538', '#ffffff'],
+    players: [
+      { name: 'Saad Al Sheeb', position: 'Arquero', number: 1, face: 'SA' },
+      { name: 'Pedro Miguel', position: 'Defensa', number: 2, face: 'PM' },
+      { name: 'Bassam Al-Rawi', position: 'Defensa', number: 5, face: 'BR' },
+      { name: 'Abdelkarim Hassan', position: 'Defensa', number: 3, face: 'AH' },
+      { name: 'Homam Ahmed', position: 'Defensa', number: 14, face: 'HA' },
+      { name: 'Karim Boudiaf', position: 'Mediocampista', number: 12, face: 'KB' },
+      { name: 'Abdulaziz Hatem', position: 'Mediocampista', number: 6, face: 'AH' },
+      { name: 'Hassan Al-Haydos', position: 'Mediocampista', number: 10, face: 'HA' },
+      { name: 'Ismaeel Mohammad', position: 'Mediocampista', number: 19, face: 'IM' },
+      { name: 'Akram Afif', position: 'Delantero', number: 11, face: 'AA' },
+      { name: 'Almoez Ali', position: 'Delantero', number: 19, face: 'AA' },
+    ],
+  },
+  ecu: {
+    name: 'Ecuador', code: 'ECU', flag: '🇪🇨', coach: 'Gustavo Alfaro',
+    formation: '4-4-2', colors: ['#ffdd00', '#034ea2'],
+    players: [
+      { name: 'Hernán Galíndez', position: 'Arquero', number: 1, face: 'HG' },
+      { name: 'Ángelo Preciado', position: 'Defensa', number: 17, face: 'AP' },
+      { name: 'Félix Torres', position: 'Defensa', number: 2, face: 'FT' },
+      { name: 'Piero Hincapié', position: 'Defensa', number: 3, face: 'PH' },
+      { name: 'Pervis Estupiñán', position: 'Defensa', number: 7, face: 'PE' },
+      { name: 'Carlos Gruezo', position: 'Mediocampista', number: 8, face: 'CG' },
+      { name: 'Gonzalo Plata', position: 'Mediocampista', number: 19, face: 'GP' },
+      { name: 'Jeremy Sarmiento', position: 'Mediocampista', number: 10, face: 'JS' },
+      { name: 'Moisés Caicedo', position: 'Mediocampista', number: 23, face: 'MC' },
+      { name: 'Enner Valencia', position: 'Delantero', number: 13, face: 'EV' },
+      { name: 'Michael Estrada', position: 'Delantero', number: 11, face: 'ME' },
+    ],
+  },
+  eng: {
+    name: 'Inglaterra', code: 'ENG', flag: '🏴', coach: 'Gareth Southgate',
+    formation: '4-2-3-1', colors: ['#ffffff', '#ce1124'],
+    players: [
+      { name: 'Jordan Pickford', position: 'Arquero', number: 1, face: 'JP' },
+      { name: 'Kieran Trippier', position: 'Defensa', number: 2, face: 'KT' },
+      { name: 'John Stones', position: 'Defensa', number: 5, face: 'JS' },
+      { name: 'Harry Maguire', position: 'Defensa', number: 6, face: 'HM' },
+      { name: 'Luke Shaw', position: 'Defensa', number: 3, face: 'LS' },
+      { name: 'Declan Rice', position: 'Mediocampista', number: 4, face: 'DR' },
+      { name: 'Mason Mount', position: 'Mediocampista', number: 19, face: 'MM' },
+      { name: 'Jude Bellingham', position: 'Mediocampista', number: 22, face: 'JB' },
+      { name: 'Bukayo Saka', position: 'Delantero', number: 17, face: 'BS' },
+      { name: 'Raheem Sterling', position: 'Delantero', number: 10, face: 'RS' },
+      { name: 'Harry Kane', position: 'Delantero', number: 9, face: 'HK' },
+    ],
+  },
+  irn: {
+    name: 'Irán', code: 'IRN', flag: '🇮🇷', coach: 'Carlos Queiroz',
+    formation: '4-1-4-1', colors: ['#239f40', '#da0000'],
+    players: [
+      { name: 'Alireza Beiranvand', position: 'Arquero', number: 1, face: 'AB' },
+      { name: 'Ramin Rezaeian', position: 'Defensa', number: 23, face: 'RR' },
+      { name: 'Morteza Pouraliganji', position: 'Defensa', number: 8, face: 'MP' },
+      { name: 'Majid Hosseini', position: 'Defensa', number: 19, face: 'MH' },
+      { name: 'Milad Mohammadi', position: 'Defensa', number: 5, face: 'MM' },
+      { name: 'Saeid Ezatolahi', position: 'Mediocampista', number: 6, face: 'SE' },
+      { name: 'Ahmad Nourollahi', position: 'Mediocampista', number: 21, face: 'AN' },
+      { name: 'Alireza Jahanbakhsh', position: 'Mediocampista', number: 7, face: 'AJ' },
+      { name: 'Ehsan Hajsafi', position: 'Mediocampista', number: 3, face: 'EH' },
+      { name: 'Mehdi Taremi', position: 'Delantero', number: 9, face: 'MT' },
+      { name: 'Sardar Azmoun', position: 'Delantero', number: 20, face: 'SA' },
+    ],
+  },
+  sen: {
+    name: 'Senegal', code: 'SEN', flag: '🇸🇳', coach: 'Aliou Cissé',
+    formation: '4-3-3', colors: ['#00853f', '#fdef42'],
+    players: [
+      { name: 'Édouard Mendy', position: 'Arquero', number: 16, face: 'EM' },
+      { name: 'Youssouf Sabaly', position: 'Defensa', number: 20, face: 'YS' },
+      { name: 'Kalidou Koulibaly', position: 'Defensa', number: 3, face: 'KK' },
+      { name: 'Abdou Diallo', position: 'Defensa', number: 22, face: 'AD' },
+      { name: 'Fodé Ballo-Touré', position: 'Defensa', number: 2, face: 'FB' },
+      { name: 'Nampalys Mendy', position: 'Mediocampista', number: 6, face: 'NM' },
+      { name: 'Pathé Ciss', position: 'Mediocampista', number: 11, face: 'PC' },
+      { name: 'Idrissa Gueye', position: 'Mediocampista', number: 5, face: 'IG' },
+      { name: 'Ismaïla Sarr', position: 'Delantero', number: 18, face: 'IS' },
+      { name: 'Krépin Diatta', position: 'Delantero', number: 15, face: 'KD' },
+      { name: 'Sadio Mané', position: 'Delantero', number: 10, face: 'SM' },
+    ],
+  },
+  ned: {
+    name: 'Países Bajos', code: 'NED', flag: '🇳🇱', coach: 'Louis van Gaal',
+    formation: '3-5-2', colors: ['#f36c21', '#21468b'],
+    players: [
+      { name: 'Andries Noppert', position: 'Arquero', number: 23, face: 'AN' },
+      { name: 'Jurrien Timber', position: 'Defensa', number: 2, face: 'JT' },
+      { name: 'Virgil van Dijk', position: 'Defensa', number: 4, face: 'VD' },
+      { name: 'Nathan Aké', position: 'Defensa', number: 5, face: 'NA' },
+      { name: 'Denzel Dumfries', position: 'Defensa', number: 22, face: 'DD' },
+      { name: 'Marten de Roon', position: 'Mediocampista', number: 15, face: 'MR' },
+      { name: 'Davy Klaassen', position: 'Mediocampista', number: 14, face: 'DK' },
+      { name: 'Frenkie de Jong', position: 'Mediocampista', number: 21, face: 'FD' },
+      { name: 'Steven Berghuis', position: 'Mediocampista', number: 11, face: 'SB' },
+      { name: 'Steven Bergwijn', position: 'Delantero', number: 7, face: 'SB' },
+      { name: 'Cody Gakpo', position: 'Delantero', number: 8, face: 'CG' },
+    ],
+  },
+  usa: {
+    name: 'Estados Unidos', code: 'USA', flag: '🇺🇸', coach: 'Gregg Berhalter',
+    formation: '4-3-3', colors: ['#b22234', '#3c3b6e'],
+    players: [
+      { name: 'Matt Turner', position: 'Arquero', number: 1, face: 'MT' },
+      { name: 'Sergiño Dest', position: 'Defensa', number: 2, face: 'SD' },
+      { name: 'Walker Zimmerman', position: 'Defensa', number: 3, face: 'WZ' },
+      { name: 'Tim Ream', position: 'Defensa', number: 13, face: 'TR' },
+      { name: 'Antonee Robinson', position: 'Defensa', number: 5, face: 'AR' },
+      { name: 'Weston McKennie', position: 'Mediocampista', number: 8, face: 'WM' },
+      { name: 'Christian Pulisic', position: 'Delantero', number: 10, face: 'CP' },
+      { name: 'Tyler Adams', position: 'Mediocampista', number: 4, face: 'TA' },
+      { name: 'Brenden Aaronson', position: 'Mediocampista', number: 11, face: 'BA' },
+      { name: 'Josh Sargent', position: 'Delantero', number: 24, face: 'JS' },
+      { name: 'Timothy Weah', position: 'Delantero', number: 21, face: 'TW' },
+    ],
+  },
+  wal: {
+    name: 'Gales', code: 'WAL', flag: '🏴', coach: 'Rob Page',
+    formation: '3-4-3', colors: ['#c8102e', '#ffffff'],
+    players: [
+      { name: 'Wayne Hennessey', position: 'Arquero', number: 1, face: 'WH' },
+      { name: 'Chris Mepham', position: 'Defensa', number: 5, face: 'CM' },
+      { name: 'Joe Rodon', position: 'Defensa', number: 6, face: 'JR' },
+      { name: 'Ben Davies', position: 'Defensa', number: 4, face: 'BD' },
+      { name: 'Connor Roberts', position: 'Defensa', number: 14, face: 'CR' },
+      { name: 'Ethan Ampadu', position: 'Mediocampista', number: 15, face: 'EA' },
+      { name: 'Neco Williams', position: 'Mediocampista', number: 3, face: 'NW' },
+      { name: 'Aaron Ramsey', position: 'Mediocampista', number: 10, face: 'AR' },
+      { name: 'Harry Wilson', position: 'Mediocampista', number: 8, face: 'HW' },
+      { name: 'Daniel James', position: 'Delantero', number: 20, face: 'DJ' },
+      { name: 'Gareth Bale', position: 'Delantero', number: 11, face: 'GB' },
+    ],
+  },
+};
+
+const matches = [
+  { id: 'wc22-d1-qat-ecu', day: 1, date: '20 de noviembre de 2022', startsAt: '2022-11-20T16:00:00Z', venue: 'Al Bayt Stadium', home: 'qat', away: 'ecu' },
+  { id: 'wc22-d2-eng-irn', day: 2, date: '21 de noviembre de 2022', startsAt: '2022-11-21T13:00:00Z', venue: 'Khalifa International Stadium', home: 'eng', away: 'irn' },
+  { id: 'wc22-d2-sen-ned', day: 2, date: '21 de noviembre de 2022', startsAt: '2022-11-21T16:00:00Z', venue: 'Al Thumama Stadium', home: 'sen', away: 'ned' },
+  { id: 'wc22-d2-usa-wal', day: 2, date: '21 de noviembre de 2022', startsAt: '2022-11-21T19:00:00Z', venue: 'Ahmad Bin Ali Stadium', home: 'usa', away: 'wal' },
+];
+
+function list(days = 2) {
+  return matches
+    .filter((match) => match.day <= days)
+    .map((match) => ({
+      ...match,
+      homeTeam: teams[match.home],
+      awayTeam: teams[match.away],
+      status: 'scheduled',
+    }));
+}
+
+module.exports = { list };
