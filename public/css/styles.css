@@ -165,8 +165,6 @@ input:focus { border-color: var(--green); box-shadow: 0 0 0 3px #2e8b5722; outli
   transition: box-shadow .3s var(--ease), transform .3s var(--ease);
 }
 .match-card:hover { box-shadow: 0 14px 30px #183b2816; transform: translateY(-2px); }
-.team { font-weight: 700; }
-.team:last-of-type { text-align: right; }
 .match-center { color: var(--muted); font-size: .78rem; text-align: center; }
 .match-date { display: block; font-size: .7rem; margin-top: 5px; }
 .prediction-form { align-items: center; display: flex; gap: 7px; }
@@ -318,7 +316,6 @@ footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .78r
   .match-card { grid-template-columns: 1fr 1fr; }
   .match-center { grid-column: 1 / -1; grid-row: 1; }
   .prediction-form { grid-column: 1 / -1; justify-content: center; }
-  .team:last-of-type { text-align: left; }
   .section-heading { align-items: start; flex-direction: column; gap: 12px; }
   .calendar-score { grid-template-columns: 1fr; }
   .calendar-team.away { flex-direction: row; text-align: left; }

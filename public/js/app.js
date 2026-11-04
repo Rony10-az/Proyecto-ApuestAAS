@@ -58,6 +58,14 @@ async function authenticate(event, endpoint) {
   }
 }
 
+function matchTeam(name, flagUrl, formation, variant) {
+  return `
+    <div class="calendar-team${variant === 'away' ? ' away' : ''}">
+      ${flagUrl ? `<img class="team-flag-img" src="${flagUrl}" alt="Bandera de ${name}" loading="lazy">` : ''}
+      <span><strong>${name}</strong>${formation ? `<small>${formation}</small>` : ''}</span>
+    </div>`;
+}
+
 function renderMatches(matches) {
   if (!matches.length) {
     elements.matchesList.innerHTML = '<p class="empty-state">Aún no hay partidos disponibles.</p>';
@@ -67,12 +75,16 @@ function renderMatches(matches) {
     const date = new Date(match.startsAt).toLocaleString('es-PE', {
       dateStyle: 'medium', timeStyle: 'short',
     });
+    const isFinished = match.status === 'finished';
     return `
       <article class="match-card" style="--i:${index}">
-        <span class="team">${match.homeTeam}</span>
-        <span class="match-center">VS<span class="match-date">${date}</span></span>
-        <span class="team">${match.awayTeam}</span>
-        ${match.status === 'scheduled' ? `
+        ${matchTeam(match.homeTeam, match.homeFlagUrl, match.homeFormation, 'home')}
+        <span class="match-center">
+          ${isFinished ? `<strong>${match.homeScore} - ${match.awayScore}</strong>` : '<span class="live-dot" aria-hidden="true"></span>VS'}
+          <span class="match-date">${date}</span>
+        </span>
+        ${matchTeam(match.awayTeam, match.awayFlagUrl, match.awayFormation, 'away')}
+        ${!isFinished ? `
           <form class="prediction-form" data-match-id="${match.id}">
             <input name="homeScore" type="number" min="0" placeholder="0" required aria-label="Goles de ${match.homeTeam}">
             <strong>-</strong>

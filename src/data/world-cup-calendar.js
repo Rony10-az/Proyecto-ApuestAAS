@@ -155,4 +155,8 @@ function list(days = 2) {
     }));
 }
 
-module.exports = { list };
+function findTeam(key) {
+  return teams[key];
+}
+
+module.exports = { list, teams, matches, findTeam };

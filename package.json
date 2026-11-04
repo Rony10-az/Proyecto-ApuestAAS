@@ -8,6 +8,7 @@
     "server": "nodemon src/server.js",
     "start": "node src/server.js",
     "test": "node --test",
+    "seed": "node scripts/seed-demo.js",
     "stress:read": "node stress/read-load.js",
     "stress:write": "node stress/write-load.js",
     "stress": "npm run stress:read && npm run stress:write"

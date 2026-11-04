@@ -9,13 +9,19 @@ function findById(id) {
   return readDatabase().matches.find((match) => match.id === id);
 }
 
-function create({ homeTeam, awayTeam, startsAt }) {
+function create({
+  homeTeam, awayTeam, startsAt, homeFlagUrl, awayFlagUrl, homeFormation, awayFormation,
+}) {
   return withLock((database) => {
     const match = {
       id: randomUUID(),
       homeTeam,
       awayTeam,
       startsAt,
+      homeFlagUrl: homeFlagUrl || null,
+      awayFlagUrl: awayFlagUrl || null,
+      homeFormation: homeFormation || null,
+      awayFormation: awayFormation || null,
       homeScore: null,
       awayScore: null,
       status: 'scheduled',

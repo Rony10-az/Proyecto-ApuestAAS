@@ -17,12 +17,13 @@ Aplicación educativa para predecir resultados del Mundial de fútbol y acumular
 2. [Funcionalidades](#funcionalidades)
 3. [Reglas de puntuación](#reglas-de-puntuación)
 4. [Arquitectura](#arquitectura)
-5. [Ejecutar en local](#ejecutar-en-local-sin-docker)
-6. [Ejecutar con Docker (escalamiento + balanceo de carga)](#ejecutar-con-docker-escalamiento-horizontal--balanceo-de-carga)
-7. [Variables de entorno](#variables-de-entorno)
-8. [Pruebas unitarias](#pruebas-unitarias)
-9. [Pruebas de estrés](#pruebas-de-estrés)
-10. [Estructura del proyecto](#estructura-del-proyecto)
+5. [Datos de demostración (seed)](#datos-de-demostración-seed)
+6. [Ejecutar en local](#ejecutar-en-local-sin-docker)
+7. [Ejecutar con Docker (escalamiento + balanceo de carga)](#ejecutar-con-docker-escalamiento-horizontal--balanceo-de-carga)
+8. [Variables de entorno](#variables-de-entorno)
+9. [Pruebas unitarias](#pruebas-unitarias)
+10. [Pruebas de estrés](#pruebas-de-estrés)
+11. [Estructura del proyecto](#estructura-del-proyecto)
 
 ---
 
@@ -71,6 +72,27 @@ flowchart LR
 - **controllers/** traducen request/response, sin lógica de negocio.
 - **services/** contienen las reglas de negocio (puntuación, validaciones, salas).
 - **repositories/** son la única capa que toca el almacenamiento (`json.repository.js` centraliza lectura/escritura y el lock entre procesos).
+
+## Datos de demostración (seed)
+
+```bash
+npm run seed
+```
+
+Usa **exclusivamente los partidos del calendario** (mismos equipos, banderas y formación que [Calendario](#funcionalidades) — nada inventado) y deja la app lista para usar/evaluar, no vacía:
+
+- **1 partido genuinamente abierto** (Estados Unidos vs Gales, el mismo del calendario) sin resultado ni predicciones precargadas, para que cualquier usuario vote su propia predicción desde "Partidos disponibles" — con sus banderas y formación, igual que en el calendario.
+- **3 partidos del calendario ya finalizados** (Qatar-Ecuador, Inglaterra-Irán, Senegal-Países Bajos) con los resultados reales del Mundial Qatar 2022, usados solo para demostrar la puntuación.
+- **4 usuarios de demostración** (contraseña `Demo1234`) cuyas predicciones sobre esos 3 partidos ejercitan, a propósito, cada una de las 5 reglas de puntuación — resultado exacto, ganador correcto, diferencia de goles, bono de racha (3 aciertos seguidos) y bono/no-bono por anticipación:
+
+| Usuario | Correo | Puntos esperados | Qué demuestra |
+|---|---|---|---|
+| Camila Rojas | camila.rojas@apuestas.demo | 19 | Acierta todo exacto + bono de racha |
+| Diego Castillo | diego.castillo@apuestas.demo | 13 | Acierta solo el ganador + bono de racha |
+| Valeria Núñez | valeria.nunez@apuestas.demo | 8 | Acierta solo la diferencia de goles (sin racha) |
+| Renzo Flores | renzo.flores@apuestas.demo | 2 | Falla casi todo, incluida una predicción no enviada |
+
+El script es idempotente: si ya existe "Camila Rojas" no vuelve a sembrar. Ver [`scripts/seed-demo.js`](scripts/seed-demo.js).
 
 ## Ejecutar en local (sin Docker)
 
@@ -163,6 +185,7 @@ SEMANA12/
 ├── public/                       # frontend (HTML/CSS/JS sin framework)
 ├── test/                         # pruebas unitarias (node --test)
 ├── stress/                       # scripts de pruebas de carga (autocannon)
+├── scripts/seed-demo.js          # datos de demostracion (partidos + usuarios)
 ├── docs/pruebas-estres.md        # metodologia y resultados de las pruebas de estres
 ├── nginx/nginx.conf              # balanceador de carga
 ├── Dockerfile / docker-compose.yml
