@@ -63,12 +63,12 @@ function renderMatches(matches) {
     elements.matchesList.innerHTML = '<p class="empty-state">Aún no hay partidos disponibles.</p>';
     return;
   }
-  elements.matchesList.innerHTML = matches.map((match) => {
+  elements.matchesList.innerHTML = matches.map((match, index) => {
     const date = new Date(match.startsAt).toLocaleString('es-PE', {
       dateStyle: 'medium', timeStyle: 'short',
     });
     return `
-      <article class="match-card">
+      <article class="match-card" style="--i:${index}">
         <span class="team">${match.homeTeam}</span>
         <span class="match-center">VS<span class="match-date">${date}</span></span>
         <span class="team">${match.awayTeam}</span>
@@ -89,7 +89,7 @@ function renderMatches(matches) {
 
 function renderRanking(ranking) {
   elements.rankingList.innerHTML = ranking.length ? ranking.map((player, index) => `
-    <div class="ranking-row">
+    <div class="ranking-row" style="--i:${index}">
       <span class="position">#${index + 1}</span>
       <span class="rank-name">${player.name}</span>
       <span class="rank-points">${player.points} pts</span>
@@ -105,10 +105,20 @@ function groupByPosition(players) {
     .filter((row) => row.length);
 }
 
+function contrastTextColor(hex) {
+  const value = hex.replace('#', '');
+  const r = parseInt(value.substring(0, 2), 16);
+  const g = parseInt(value.substring(2, 4), 16);
+  const b = parseInt(value.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? '#13201a' : '#ffffff';
+}
+
 function renderPitchPlayer(player, team) {
+  const textColor = contrastTextColor(team.colors[0]);
   return `
     <span class="pitch-player" title="${player.name} · ${player.position} · #${player.number}">
-      <span class="jersey" style="background:${team.colors[0]};border-color:${team.colors[1]}">${player.number}</span>
+      <span class="jersey" style="background:${team.colors[0]};border-color:${team.colors[1]};color:${textColor}">${player.number}</span>
       <span class="pitch-player-name">${player.name.split(' ').slice(-1)[0]}</span>
     </span>`;
 }
@@ -124,20 +134,24 @@ function renderPitchTeam(team, rowOrder) {
     </div>`;
 }
 
+function flagImg(team) {
+  return `<img class="team-flag-img" src="${team.flagUrl}" alt="Bandera de ${team.name}" loading="lazy">`;
+}
+
 function renderCalendar({ matches }) {
-  elements.calendarList.innerHTML = matches.map((match) => `
-    <article class="calendar-card">
+  elements.calendarList.innerHTML = matches.map((match, index) => `
+    <article class="calendar-card" style="--i:${index}">
       <div class="calendar-meta"><span>DÍA ${match.day}</span><span>${match.date}</span><span>${match.venue}</span></div>
       <div class="calendar-score">
-        <div class="calendar-team"><span class="team-flag">${match.homeTeam.flag}</span><strong>${match.homeTeam.name}</strong><small>${match.homeTeam.code} · ${match.homeTeam.formation}</small></div>
-      <div class="score upcoming">VS<span> · Por jugar</span></div>
-        <div class="calendar-team away"><span class="team-flag">${match.awayTeam.flag}</span><strong>${match.awayTeam.name}</strong><small>${match.awayTeam.code} · ${match.awayTeam.formation}</small></div>
+        <div class="calendar-team">${flagImg(match.homeTeam)}<span><strong>${match.homeTeam.name}</strong><small>${match.homeTeam.code} · ${match.homeTeam.formation}</small></span></div>
+        <div class="score upcoming"><span class="live-dot" aria-hidden="true"></span>VS<span>Por jugar</span></div>
+        <div class="calendar-team away">${flagImg(match.awayTeam)}<span><strong>${match.awayTeam.name}</strong><small>${match.awayTeam.code} · ${match.awayTeam.formation}</small></span></div>
       </div>
       <details class="lineup-details">
         <summary>Ver formaciones y alineaciones</summary>
         <div class="lineup-meta">
-          <span>${match.awayTeam.flag} ${match.awayTeam.name} · DT ${match.awayTeam.coach} · ${match.awayTeam.formation}</span>
-          <span>${match.homeTeam.flag} ${match.homeTeam.name} · DT ${match.homeTeam.coach} · ${match.homeTeam.formation}</span>
+          <span>${flagImg(match.awayTeam)} ${match.awayTeam.name} · DT ${match.awayTeam.coach} · ${match.awayTeam.formation}</span>
+          <span>${flagImg(match.homeTeam)} ${match.homeTeam.name} · DT ${match.homeTeam.coach} · ${match.homeTeam.formation}</span>
         </div>
         <div class="pitch">
           <div class="pitch-stripes" aria-hidden="true"></div>
@@ -157,8 +171,8 @@ function renderRooms(rooms) {
     elements.roomsList.innerHTML = '<p class="empty-state">Aún no perteneces a ninguna sala.</p>';
     return;
   }
-  elements.roomsList.innerHTML = rooms.map((room) => `
-    <article class="room-card" data-room-id="${room.id}">
+  elements.roomsList.innerHTML = rooms.map((room, index) => `
+    <article class="room-card" data-room-id="${room.id}" style="--i:${index}">
       <h3>${room.name}</h3>
       <span class="room-code">${room.code}</span>
       <p class="room-members">${room.members.length} participante${room.members.length === 1 ? '' : 's'}</p>
@@ -231,7 +245,12 @@ async function loadDashboard() {
   await loadRooms();
 }
 
+function renderSkeleton(container, count) {
+  container.innerHTML = Array.from({ length: count }, () => '<div class="skeleton-row"></div>').join('');
+}
+
 async function loadCalendar() {
+  renderSkeleton(elements.calendarList, 2);
   try {
     renderCalendar(await request('/calendar?days=2'));
   } catch (error) {

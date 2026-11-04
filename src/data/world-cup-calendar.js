@@ -1,6 +1,6 @@
 const teams = {
   qat: {
-    name: 'Qatar', code: 'QAT', flag: '🇶🇦', coach: 'Félix Sánchez',
+    name: 'Qatar', code: 'QAT', flag: '🇶🇦', flagUrl: '/images/flags/qat.svg', coach: 'Félix Sánchez',
     formation: '5-3-2', colors: ['#8a1538', '#ffffff'],
     players: [
       { name: 'Saad Al Sheeb', position: 'Arquero', number: 1, face: 'SA' },
@@ -17,7 +17,7 @@ const teams = {
     ],
   },
   ecu: {
-    name: 'Ecuador', code: 'ECU', flag: '🇪🇨', coach: 'Gustavo Alfaro',
+    name: 'Ecuador', code: 'ECU', flag: '🇪🇨', flagUrl: '/images/flags/ecu.svg', coach: 'Gustavo Alfaro',
     formation: '4-4-2', colors: ['#ffdd00', '#034ea2'],
     players: [
       { name: 'Hernán Galíndez', position: 'Arquero', number: 1, face: 'HG' },
@@ -34,7 +34,7 @@ const teams = {
     ],
   },
   eng: {
-    name: 'Inglaterra', code: 'ENG', flag: '🏴', coach: 'Gareth Southgate',
+    name: 'Inglaterra', code: 'ENG', flag: '🏴', flagUrl: '/images/flags/eng.svg', coach: 'Gareth Southgate',
     formation: '4-2-3-1', colors: ['#ffffff', '#ce1124'],
     players: [
       { name: 'Jordan Pickford', position: 'Arquero', number: 1, face: 'JP' },
@@ -51,7 +51,7 @@ const teams = {
     ],
   },
   irn: {
-    name: 'Irán', code: 'IRN', flag: '🇮🇷', coach: 'Carlos Queiroz',
+    name: 'Irán', code: 'IRN', flag: '🇮🇷', flagUrl: '/images/flags/irn.svg', coach: 'Carlos Queiroz',
     formation: '4-1-4-1', colors: ['#239f40', '#da0000'],
     players: [
       { name: 'Alireza Beiranvand', position: 'Arquero', number: 1, face: 'AB' },
@@ -68,7 +68,7 @@ const teams = {
     ],
   },
   sen: {
-    name: 'Senegal', code: 'SEN', flag: '🇸🇳', coach: 'Aliou Cissé',
+    name: 'Senegal', code: 'SEN', flag: '🇸🇳', flagUrl: '/images/flags/sen.svg', coach: 'Aliou Cissé',
     formation: '4-3-3', colors: ['#00853f', '#fdef42'],
     players: [
       { name: 'Édouard Mendy', position: 'Arquero', number: 16, face: 'EM' },
@@ -85,7 +85,7 @@ const teams = {
     ],
   },
   ned: {
-    name: 'Países Bajos', code: 'NED', flag: '🇳🇱', coach: 'Louis van Gaal',
+    name: 'Países Bajos', code: 'NED', flag: '🇳🇱', flagUrl: '/images/flags/ned.svg', coach: 'Louis van Gaal',
     formation: '3-5-2', colors: ['#f36c21', '#21468b'],
     players: [
       { name: 'Andries Noppert', position: 'Arquero', number: 23, face: 'AN' },
@@ -102,7 +102,7 @@ const teams = {
     ],
   },
   usa: {
-    name: 'Estados Unidos', code: 'USA', flag: '🇺🇸', coach: 'Gregg Berhalter',
+    name: 'Estados Unidos', code: 'USA', flag: '🇺🇸', flagUrl: '/images/flags/usa.svg', coach: 'Gregg Berhalter',
     formation: '4-3-3', colors: ['#b22234', '#3c3b6e'],
     players: [
       { name: 'Matt Turner', position: 'Arquero', number: 1, face: 'MT' },
@@ -119,7 +119,7 @@ const teams = {
     ],
   },
   wal: {
-    name: 'Gales', code: 'WAL', flag: '🏴', coach: 'Rob Page',
+    name: 'Gales', code: 'WAL', flag: '🏴', flagUrl: '/images/flags/wal.svg', coach: 'Rob Page',
     formation: '3-4-3', colors: ['#c8102e', '#ffffff'],
     players: [
       { name: 'Wayne Hennessey', position: 'Arquero', number: 1, face: 'WH' },
