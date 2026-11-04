@@ -1,29 +1,37 @@
-# ApuestAs
+<div align="center">
 
-Aplicación educativa para predecir resultados del Mundial de fútbol y acumular puntos según la precisión de las predicciones. **Ejercicio académico, no involucra dinero real.**
+# 🏆 ApuestAs
+
+### Predice. Compite. Suma puntos.
+
+Aplicación educativa para predecir resultados del Mundial de fútbol y acumular puntos según la precisión de las predicciones.
+**Ejercicio académico — no involucra dinero real.**
 
 ![Node](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-load_balancer-009639?logo=nginx&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-node--%3Atest-brightgreen)
+![Tests](https://img.shields.io/badge/tests-14%20passing-brightgreen)
 ![License](https://img.shields.io/badge/license-ISC-lightgrey)
+
+</div>
 
 ---
 
 ## Índice
 
 1. [Descripción](#descripción)
-2. [Funcionalidades](#funcionalidades)
-3. [Reglas de puntuación](#reglas-de-puntuación)
-4. [Arquitectura](#arquitectura)
-5. [Datos de demostración (seed)](#datos-de-demostración-seed)
-6. [Ejecutar en local](#ejecutar-en-local-sin-docker)
-7. [Ejecutar con Docker (escalamiento + balanceo de carga)](#ejecutar-con-docker-escalamiento-horizontal--balanceo-de-carga)
-8. [Variables de entorno](#variables-de-entorno)
-9. [Pruebas unitarias](#pruebas-unitarias)
-10. [Pruebas de estrés](#pruebas-de-estrés)
-11. [Estructura del proyecto](#estructura-del-proyecto)
+2. [Capturas](#capturas)
+3. [Funcionalidades](#funcionalidades)
+4. [Reglas de puntuación](#reglas-de-puntuación)
+5. [Arquitectura](#arquitectura)
+6. [Datos de demostración (seed)](#datos-de-demostración-seed)
+7. [Ejecutar en local](#ejecutar-en-local-sin-docker)
+8. [Ejecutar con Docker (escalamiento + balanceo de carga)](#ejecutar-con-docker-escalamiento-horizontal--balanceo-de-carga)
+9. [Variables de entorno](#variables-de-entorno)
+10. [Pruebas unitarias](#pruebas-unitarias)
+11. [Pruebas de estrés](#pruebas-de-estrés)
+12. [Estructura del proyecto](#estructura-del-proyecto)
 
 ---
 
@@ -31,17 +39,53 @@ Aplicación educativa para predecir resultados del Mundial de fútbol y acumular
 
 Los usuarios se registran, predicen el marcador de los partidos del Mundial y suman puntos según qué tan acertada fue su predicción. Pueden competir en el ranking global o crear **salas privadas** para competir solo con sus amigos.
 
+## Capturas
+
+<div align="center">
+<table>
+<tr>
+<td width="50%">
+
+**Bienvenida y reglas de puntuación**
+<img src="docs/screenshots/01-hero-reglas.png" alt="Hero con foto de estadio y reglas de puntuación">
+
+</td>
+<td width="50%">
+
+**Predicción con banderas, formaciones y puntos**
+<img src="docs/screenshots/04-prediccion-toast.png" alt="Panel de predicción con notificación toast">
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**Partidos y ranking lateral con estrellas**
+<img src="docs/screenshots/03-partidos-ranking.png" alt="Partidos disponibles y tabla de posiciones">
+
+</td>
+<td width="50%">
+
+**Alineaciones sobre una cancha visual**
+<img src="docs/screenshots/06-alineaciones.png" alt="Alineaciones por posición en una cancha">
+
+</td>
+</tr>
+</table>
+</div>
+
 ## Funcionalidades
 
 | Módulo | Qué hace |
 |---|---|
 | **Autenticación** | Registro y login con JWT, contraseñas con hash + salt (`scrypt`) |
 | **Partidos** | Crear partidos, registrar resultado final |
-| **Predicciones** | Registrar/editar una predicción por partido antes de que empiece |
-| **Puntuación** | Cálculo automático de puntos según las 5 reglas oficiales |
-| **Ranking** | Tabla de posiciones global, ordenada por puntos |
+| **Predicciones** | Opciones rápidas (ganador/empate con bandera y formación) o marcador exacto, con los puntos de cada opción visibles antes de votar |
+| **Puntuación** | Cálculo automático de puntos según las 5 reglas oficiales, visibles dentro de la app |
+| **Ranking** | Panel lateral fijo (sticky) con avatar de iniciales y calificación por estrellas |
 | **Salas (grupos)** | Crear sala con código de invitación de 6 caracteres, unirse por código, ranking acotado a los miembros de la sala |
 | **Calendario** | Fixture del Mundial Qatar 2022 con alineaciones mostradas en una **cancha visual** por posición |
+| **Notificaciones** | Toasts flotantes (éxito/error) que no interrumpen el flujo de la página |
 
 ## Reglas de puntuación
 
