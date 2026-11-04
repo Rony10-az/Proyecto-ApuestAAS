@@ -24,7 +24,15 @@ function readDatabase() {
 
 function writeDatabase(database) {
   ensureDatabase();
-  fs.writeFileSync(databasePath, JSON.stringify(database, null, 2));
+  // Escritura atomica (write + rename): fs.writeFileSync sobre databasePath
+  // directamente trunca el archivo antes de escribir el contenido nuevo, por
+  // lo que una lectura concurrente de otra replica (findById/findByEmail no
+  // pasan por el lock) puede ver el archivo a mitad de escritura y romper el
+  // JSON.parse. rename() en el mismo filesystem es atomico, asi que cualquier
+  // lectura ve siempre la version anterior completa o la nueva completa.
+  const tmpPath = `${databasePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmpPath, JSON.stringify(database, null, 2));
+  fs.renameSync(tmpPath, databasePath);
 }
 
 const lockPath = `${databasePath}.lock`;

@@ -32,3 +32,12 @@ Para agregar una réplica más, duplicar un bloque `appN` en `docker-compose.yml
 npm install
 npm run dev
 ```
+
+## Pruebas de estrés
+
+```bash
+npm run stress:read   # GET /health, /calendar, /matches, /apuestas
+npm run stress:write  # registro + partido + prediccion encadenados (ejercita el lock)
+```
+
+Requieren el stack levantado (`docker compose up -d --build`) y usan `http://localhost:8080` por defecto (configurable con `TARGET`, `CONNECTIONS`, `DURATION`). Metodología, resultados y un bug de concurrencia real que se encontró y corrigió durante estas pruebas: [docs/pruebas-estres.md](docs/pruebas-estres.md).

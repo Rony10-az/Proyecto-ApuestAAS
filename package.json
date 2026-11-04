@@ -7,7 +7,10 @@
     "dev": "nodemon src/server.js",
     "server": "nodemon src/server.js",
     "start": "node src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "stress:read": "node stress/read-load.js",
+    "stress:write": "node stress/write-load.js",
+    "stress": "npm run stress:read && npm run stress:write"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,7 @@
     "uuid": "^14.0.3"
   },
   "devDependencies": {
+    "autocannon": "^8.0.0",
     "nodemon": "^3.1.14"
   }
 }
