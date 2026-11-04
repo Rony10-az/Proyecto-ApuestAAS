@@ -97,6 +97,33 @@ function renderRanking(ranking) {
   `).join('') : '<p class="empty-state">Todavía no hay participantes.</p>';
 }
 
+const PITCH_POSITION_ORDER = ['Arquero', 'Defensa', 'Mediocampista', 'Delantero'];
+
+function groupByPosition(players) {
+  return PITCH_POSITION_ORDER
+    .map((position) => players.filter((player) => player.position === position))
+    .filter((row) => row.length);
+}
+
+function renderPitchPlayer(player, team) {
+  return `
+    <span class="pitch-player" title="${player.name} · ${player.position} · #${player.number}">
+      <span class="jersey" style="background:${team.colors[0]};border-color:${team.colors[1]}">${player.number}</span>
+      <span class="pitch-player-name">${player.name.split(' ').slice(-1)[0]}</span>
+    </span>`;
+}
+
+function renderPitchTeam(team, rowOrder) {
+  const rows = groupByPosition(team.players);
+  const ordered = rowOrder === 'reverse' ? [...rows].reverse() : rows;
+  return `
+    <div class="pitch-team">
+      ${ordered.map((row) => `
+        <div class="pitch-row">${row.map((player) => renderPitchPlayer(player, team)).join('')}</div>
+      `).join('')}
+    </div>`;
+}
+
 function renderCalendar({ matches }) {
   elements.calendarList.innerHTML = matches.map((match) => `
     <article class="calendar-card">
@@ -107,12 +134,19 @@ function renderCalendar({ matches }) {
         <div class="calendar-team away"><span class="team-flag">${match.awayTeam.flag}</span><strong>${match.awayTeam.name}</strong><small>${match.awayTeam.code} · ${match.awayTeam.formation}</small></div>
       </div>
       <details class="lineup-details">
-        <summary>Ver formaciones y jugadores</summary>
-        <div class="lineups">
-          ${[match.homeTeam, match.awayTeam].map((team) => `
-            <div class="lineup"><strong>${team.flag} ${team.name}</strong><span>DT: ${team.coach} · ${team.formation}</span>
-              <div class="players">${team.players.map((player) => `<span class="player"><i>${player.face}</i>${player.name}<small>${player.position} · #${player.number}</small></span>`).join('')}</div>
-            </div>`).join('')}
+        <summary>Ver formaciones y alineaciones</summary>
+        <div class="lineup-meta">
+          <span>${match.awayTeam.flag} ${match.awayTeam.name} · DT ${match.awayTeam.coach} · ${match.awayTeam.formation}</span>
+          <span>${match.homeTeam.flag} ${match.homeTeam.name} · DT ${match.homeTeam.coach} · ${match.homeTeam.formation}</span>
+        </div>
+        <div class="pitch">
+          <div class="pitch-stripes" aria-hidden="true"></div>
+          <div class="pitch-circle" aria-hidden="true"></div>
+          <div class="pitch-line" aria-hidden="true"></div>
+          <div class="pitch-goal pitch-goal-top" aria-hidden="true"></div>
+          <div class="pitch-goal pitch-goal-bottom" aria-hidden="true"></div>
+          ${renderPitchTeam(match.awayTeam, 'normal')}
+          ${renderPitchTeam(match.homeTeam, 'reverse')}
         </div>
       </details>
     </article>`).join('');
